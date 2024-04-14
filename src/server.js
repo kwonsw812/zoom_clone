@@ -1,6 +1,11 @@
 import express from "express";
 import http from "http";
-import WebSocket from "ws";
+import { Server } from "socket.io";
+import { dirname } from 'path';
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
@@ -12,30 +17,34 @@ app.get("/", (req, res) => res.render("home"));
 
 const hadleListen = () => console.log("Listening on http://localhost:3000");
 
-const server = http.createServer(app);
-const wss = new WebSocket.Server({server});
+const httpServer = http.createServer(app);
+const wsServer = new Server(httpServer);
 
-const sockets = [];
+wsServer.on("connection", (socket) => {
+    console.log(socket);
+})
 
-wss.on("connection", (socket) => {
-    sockets.push(socket);
-    socket["nickname"] == "Anon"
-    console.log("Connected to Browser");
+// const sockets = [];
 
-    socket.on("close", () => {
-        console.log("Disconnected from the Browser");
-    });
+// wss.on("connection", (socket) => {
+//     sockets.push(socket);
+//     socket["nickname"] == "Anon"
+//     console.log("Connected to Browser");
 
-    socket.on("message", (msg) => {
-        const message = JSON.parse(msg);
+//     socket.on("close", () => {
+//         console.log("Disconnected from the Browser");
+//     });
 
-        switch(message.type) {
-            case 'new_message':
-                sockets.forEach(aSocket => aSocket.send(`${socket.nickname}: ${message.payload}`));
-            case 'nickname':
-                socket["nickname"] = message.payload;
-        }
-    });
-});
+//     socket.on("message", (msg) => {
+//         const message = JSON.parse(msg);
 
-server.listen(3000, hadleListen);
+//         switch(message.type) {
+//             case 'new_message':
+//                 sockets.forEach(aSocket => aSocket.send(`${socket.nickname}: ${message.payload}`));
+//             case 'nickname':
+//                 socket["nickname"] = message.payload;
+//         }
+//     });
+// });
+
+httpServer.listen(3000, hadleListen);
