@@ -51,7 +51,11 @@ async function getMedia(deviceId) {
 
   try {
     myStream = await navigator.mediaDevices.getUserMedia(
-      deviceId ? cameraConstraints : initialConstrains
+      // deviceId ? cameraConstraints : initialConstrains
+      {
+        video: true,
+        audio: true,
+      }
     );
 
     myFace.srcObject = myStream;
