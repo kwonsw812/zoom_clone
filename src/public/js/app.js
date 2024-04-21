@@ -186,7 +186,7 @@ function makeConnection() {
   });
 
   myPeerConnection.addEventListener("icecandidate", handleIce);
-  myPeerConnection.addEventListener("addstream", handleAddStream);
+  myPeerConnection.addEventListener("track", handleTrack);
 
   myStream
     .getTracks()
@@ -198,10 +198,10 @@ function handleIce(data) {
   socket.emit("ice", data.candidate, roomName);
 }
 
-function handleAddStream(data) {
+function handleTrack(data) {
   const peersFace = document.getElementById("peersFace");
 
-  peersFace.srcObject = data.stream;
+  peersFace.srcObject = data.streams[0];
 }
 
 // const welcome = document.getElementById("welcome");
