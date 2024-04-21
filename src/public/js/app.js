@@ -54,7 +54,7 @@ async function getMedia(deviceId) {
       // deviceId ? cameraConstraints : initialConstrains
       {
         video: true,
-        audio: true,
+        // audio: true,
       }
     );
 
